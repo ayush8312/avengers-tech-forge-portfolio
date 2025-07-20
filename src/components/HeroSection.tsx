@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, Github, Linkedin, Mail, Phone } from 'lucide-react';
+import { ChevronDown, Github, Linkedin, Mail, Phone, Zap, Shield, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ParticleBackground } from './ParticleBackground';
 import heroBg from '@/assets/hero-bg.jpg';
@@ -7,6 +7,8 @@ import heroBg from '@/assets/hero-bg.jpg';
 export const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
+  const [activePower, setActivePower] = useState<string | null>(null);
+  const [hulkMode, setHulkMode] = useState(false);
   
   const heroTexts = [
     "INITIALIZING...",
@@ -90,7 +92,7 @@ export const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Button 
                 size="lg" 
-                className="power-button font-orbitron font-bold px-8 py-4 text-lg"
+                className="power-button font-orbitron font-bold px-8 py-4 text-lg iron-repulsor"
                 onClick={() => scrollToSection('contact')}
               >
                 INITIATE CONTACT
@@ -116,6 +118,130 @@ export const HeroSection = () => {
                   LINKEDIN
                 </Button>
               </div>
+            </div>
+
+            {/* Avengers Power Controls */}
+            <div className="mt-12 space-y-6">
+              <p className="text-sm font-orbitron text-accent opacity-80">
+                [ AVENGERS PROTOCOL ACTIVATED ]
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-4">
+                {/* Iron Man Repulsor */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`avenger-power-up iron-repulsor ${activePower === 'ironman' ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => {
+                    setActivePower(activePower === 'ironman' ? null : 'ironman');
+                    document.body.style.background = activePower === 'ironman' 
+                      ? 'var(--gradient-hero)' 
+                      : 'linear-gradient(135deg, hsl(195 100% 10%) 0%, hsl(220 25% 8%) 50%, hsl(195 100% 15%) 100%)';
+                  }}
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  REPULSORS
+                </Button>
+
+                {/* Hulk Smash */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`hulk-smash ${hulkMode ? 'ring-2 ring-green-500' : ''}`}
+                  style={{ 
+                    color: hulkMode ? 'hsl(var(--hulk-green))' : ''
+                  }}
+                  onClick={() => {
+                    setHulkMode(!hulkMode);
+                    document.body.style.animation = hulkMode ? 'none' : 'ground-shake 0.8s ease-in-out';
+                    setTimeout(() => document.body.style.animation = 'none', 800);
+                  }}
+                >
+                  💪 HULK MODE
+                </Button>
+
+                {/* Thor Lightning */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`thor-lightning ${activePower === 'thor' ? 'ring-2 ring-yellow-400' : ''}`}
+                  onClick={() => {
+                    setActivePower(activePower === 'thor' ? null : 'thor');
+                    if (activePower !== 'thor') {
+                      // Lightning effect
+                      const lightning = document.createElement('div');
+                      lightning.className = 'fixed inset-0 pointer-events-none z-50';
+                      lightning.style.background = 'radial-gradient(circle, hsl(60 100% 80% / 0.3) 0%, transparent 70%)';
+                      lightning.style.animation = 'lightning-flicker 0.2s ease-in-out 3';
+                      document.body.appendChild(lightning);
+                      setTimeout(() => document.body.removeChild(lightning), 600);
+                    }
+                  }}
+                >
+                  ⚡ MJOLNIR
+                </Button>
+
+                {/* Cap Shield */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`shield-throw ${activePower === 'cap' ? 'ring-2 ring-blue-500' : ''}`}
+                  onClick={() => setActivePower(activePower === 'cap' ? null : 'cap')}
+                >
+                  <Shield className="w-4 h-4 mr-2" />
+                  SHIELD
+                </Button>
+
+                {/* Hawkeye Precision */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`hawkeye-precision ${activePower === 'hawkeye' ? 'ring-2 ring-purple-500' : ''}`}
+                  onClick={() => setActivePower(activePower === 'hawkeye' ? null : 'hawkeye')}
+                >
+                  <Target className="w-4 h-4 mr-2" />
+                  PRECISION
+                </Button>
+
+                {/* Widow Stealth */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`widow-stealth ${activePower === 'widow' ? 'ring-2 ring-red-500' : ''}`}
+                  onClick={() => {
+                    setActivePower(activePower === 'widow' ? null : 'widow');
+                    if (activePower !== 'widow') {
+                      document.querySelector('section')?.style.setProperty('opacity', '0.7');
+                      setTimeout(() => {
+                        document.querySelector('section')?.style.setProperty('opacity', '1');
+                      }, 500);
+                    }
+                  }}
+                >
+                  🕷️ STEALTH
+                </Button>
+              </div>
+
+              {/* Power Status Display */}
+              {activePower && (
+                <div className="mt-6 p-4 border border-primary/30 rounded-lg bg-card/50 backdrop-blur-sm animate-fade-in">
+                  <p className="text-sm font-orbitron text-primary">
+                    {activePower === 'ironman' && '[ REPULSOR ARRAY ONLINE - ARC REACTOR AT 100% ]'}
+                    {activePower === 'thor' && '[ MJOLNIR RESPONDING - ASGARDIAN POWER DETECTED ]'}
+                    {activePower === 'cap' && '[ VIBRANIUM SHIELD READY - TACTICAL ADVANTAGE ACHIEVED ]'}
+                    {activePower === 'hawkeye' && '[ ENHANCED TARGETING SYSTEMS ACTIVE ]'}
+                    {activePower === 'widow' && '[ STEALTH PROTOCOLS ENGAGED - GHOST MODE ACTIVE ]'}
+                  </p>
+                </div>
+              )}
+
+              {hulkMode && (
+                <div className="mt-4 p-4 border-2 border-green-500 rounded-lg bg-green-500/10 animate-fade-in">
+                  <p className="text-sm font-orbitron text-green-400 hulk-smash">
+                    [ HULK SMASH ACTIVATED - GAMMA RADIATION LEVELS: EXTREME ]
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}

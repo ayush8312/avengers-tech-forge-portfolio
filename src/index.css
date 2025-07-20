@@ -48,18 +48,29 @@
     --stark-gold: 45 100% 50%;
     --vibranium: 240 100% 50%;
     --hulk-green: 120 80% 40%;
+    --hulk-gamma: 120 100% 30%;
     --widow-red: 0 85% 55%;
+    --thor-lightning: 60 100% 80%;
+    --cap-shield: 220 100% 45%;
+    --hawkeye-purple: 280 80% 60%;
     
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(220 25% 8%) 0%, hsl(220 50% 15%) 50%, hsl(195 100% 20%) 100%);
     --gradient-arc: linear-gradient(135deg, hsl(195 100% 50%) 0%, hsl(195 100% 70%) 50%, hsl(45 100% 50%) 100%);
     --gradient-shield: linear-gradient(135deg, hsl(220 50% 25%) 0%, hsl(0 85% 55%) 50%, hsl(210 20% 98%) 100%);
     --gradient-power: radial-gradient(circle, hsl(195 100% 50% / 0.3) 0%, transparent 70%);
+    --gradient-hulk: radial-gradient(circle, hsl(120 80% 40% / 0.4) 0%, hsl(120 100% 30% / 0.2) 50%, transparent 100%);
+    --gradient-lightning: linear-gradient(45deg, hsl(60 100% 80%) 0%, hsl(45 100% 50%) 50%, hsl(195 100% 50%) 100%);
+    --gradient-shield-beam: linear-gradient(90deg, hsl(220 100% 45% / 0.8) 0%, hsl(0 85% 55% / 0.6) 50%, hsl(210 20% 98% / 0.8) 100%);
     
     /* Shadows & Glows */
     --glow-arc: 0 0 20px hsl(195 100% 50% / 0.5), 0 0 40px hsl(195 100% 50% / 0.3), 0 0 80px hsl(195 100% 50% / 0.1);
     --glow-gold: 0 0 20px hsl(45 100% 50% / 0.5), 0 0 40px hsl(45 100% 50% / 0.3);
+    --glow-hulk: 0 0 30px hsl(120 80% 40% / 0.6), 0 0 60px hsl(120 100% 30% / 0.4), 0 0 120px hsl(120 80% 40% / 0.2);
+    --glow-lightning: 0 0 25px hsl(60 100% 80% / 0.7), 0 0 50px hsl(60 100% 80% / 0.5), 0 0 100px hsl(45 100% 50% / 0.3);
+    --glow-shield: 0 0 20px hsl(220 100% 45% / 0.5), 0 0 40px hsl(0 85% 55% / 0.3), 0 0 80px hsl(210 20% 98% / 0.2);
     --shadow-heroic: 0 25px 50px -12px hsl(220 25% 8% / 0.8);
+    --shadow-smash: 0 0 50px hsl(120 80% 40% / 0.4), inset 0 0 30px hsl(120 100% 30% / 0.3);
     
     /* Animations */
     --transition-heroic: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -241,6 +252,98 @@
     @apply absolute rounded-full bg-primary/20;
     animation: float-particle 15s linear infinite;
   }
+  
+  /* Avengers Character Effects */
+  .hulk-smash {
+    @apply cursor-pointer transition-all duration-200;
+    animation: hulk-grow 0.3s ease-in-out;
+  }
+  
+  .hulk-smash:hover {
+    color: hsl(var(--hulk-green));
+    text-shadow: var(--glow-hulk);
+    transform: scale(1.1);
+    animation: hulk-rage 0.5s ease-in-out;
+  }
+  
+  .thor-lightning {
+    @apply relative;
+    color: hsl(var(--thor-lightning));
+    text-shadow: var(--glow-lightning);
+    animation: lightning-flicker 2s ease-in-out infinite;
+  }
+  
+  .shield-throw {
+    @apply transform transition-all duration-700;
+    background: var(--gradient-shield-beam);
+    border: 2px solid hsl(var(--cap-shield));
+    box-shadow: var(--glow-shield);
+  }
+  
+  .shield-throw:hover {
+    transform: rotate(360deg) scale(1.05);
+    animation: shield-spin 0.8s ease-in-out;
+  }
+  
+  .widow-stealth {
+    @apply transition-all duration-500;
+    opacity: 0.8;
+  }
+  
+  .widow-stealth:hover {
+    opacity: 1;
+    color: hsl(var(--widow-red));
+    animation: stealth-reveal 0.4s ease-in-out;
+  }
+  
+  .hawkeye-precision {
+    @apply transform transition-all duration-300;
+    color: hsl(var(--hawkeye-purple));
+  }
+  
+  .hawkeye-precision:hover {
+    transform: scale(1.02);
+    animation: arrow-nock 0.3s ease-in-out;
+  }
+  
+  .iron-repulsor {
+    @apply relative overflow-hidden;
+    background: var(--gradient-arc);
+  }
+  
+  .iron-repulsor::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.8) 0%, transparent 70%);
+  }
+  
+  .iron-repulsor:hover::before {
+    @apply opacity-100;
+    animation: repulsor-charge 0.6s ease-out;
+  }
+  
+  /* Character Power Ups */
+  .avenger-power-up {
+    @apply transform transition-all duration-500;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .avenger-power-up::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, hsl(var(--primary) / 0.1) 50%, transparent 70%);
+    transform: rotate(45deg);
+    transition: transform 0.6s ease;
+  }
+  
+  .avenger-power-up:hover::after {
+    transform: rotate(45deg) translate(100%, 100%);
+  }
 }
 
 @layer utilities {
@@ -308,4 +411,76 @@
     transform: translateY(-100vh) rotate(360deg);
     opacity: 0;
   }
+}
+
+/* Avengers Character Animations */
+@keyframes hulk-rage {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.15) rotate(-2deg); }
+  50% { transform: scale(1.1) rotate(1deg); }
+  75% { transform: scale(1.12) rotate(-1deg); }
+  100% { transform: scale(1.1); }
+}
+
+@keyframes hulk-grow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes lightning-flicker {
+  0%, 100% { 
+    opacity: 1; 
+    text-shadow: var(--glow-lightning);
+  }
+  25% { 
+    opacity: 0.8; 
+    text-shadow: 0 0 50px hsl(60 100% 80% / 0.9);
+  }
+  50% { 
+    opacity: 1.2; 
+    text-shadow: var(--glow-lightning), 0 0 80px hsl(45 100% 50% / 0.7);
+  }
+  75% { 
+    opacity: 0.9; 
+    text-shadow: 0 0 40px hsl(60 100% 80% / 0.8);
+  }
+}
+
+@keyframes shield-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1.05); }
+}
+
+@keyframes stealth-reveal {
+  0% { opacity: 0.8; filter: blur(2px); }
+  50% { opacity: 0.5; filter: blur(1px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+
+@keyframes arrow-nock {
+  0% { transform: scale(1) translateX(0); }
+  25% { transform: scale(1.02) translateX(-2px); }
+  50% { transform: scale(1.01) translateX(1px); }
+  100% { transform: scale(1.02) translateX(0); }
+}
+
+@keyframes repulsor-charge {
+  0% { transform: scale(1); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+@keyframes ground-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-2px); }
+  20% { transform: translateX(2px); }
+  30% { transform: translateX(-1px); }
+  40% { transform: translateX(1px); }
+  50% { transform: translateX(-2px); }
+  60% { transform: translateX(2px); }
+  70% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+  90% { transform: translateX(-1px); }
 }

@@ -1,42 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Avengers Marvel Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Marvel Color Palette */
+    --background: 220 25% 8%;
+    --foreground: 210 20% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 25% 12%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 25% 12%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Iron Man Arc Reactor Blue */
+    --primary: 195 100% 50%;
+    --primary-foreground: 220 25% 8%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Captain America Shield Blue */
+    --secondary: 220 50% 25%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 25% 15%;
+    --muted-foreground: 210 10% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Thor Lightning Gold */
+    --accent: 45 100% 50%;
+    --accent-foreground: 220 25% 8%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Iron Man Red */
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 25% 20%;
+    --input: 220 25% 15%;
+    --ring: 195 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Custom Marvel Colors */
+    --arc-reactor: 195 100% 50%;
+    --arc-reactor-glow: 195 100% 70%;
+    --stark-gold: 45 100% 50%;
+    --vibranium: 240 100% 50%;
+    --hulk-green: 120 80% 40%;
+    --widow-red: 0 85% 55%;
+    
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(220 25% 8%) 0%, hsl(220 50% 15%) 50%, hsl(195 100% 20%) 100%);
+    --gradient-arc: linear-gradient(135deg, hsl(195 100% 50%) 0%, hsl(195 100% 70%) 50%, hsl(45 100% 50%) 100%);
+    --gradient-shield: linear-gradient(135deg, hsl(220 50% 25%) 0%, hsl(0 85% 55%) 50%, hsl(210 20% 98%) 100%);
+    --gradient-power: radial-gradient(circle, hsl(195 100% 50% / 0.3) 0%, transparent 70%);
+    
+    /* Shadows & Glows */
+    --glow-arc: 0 0 20px hsl(195 100% 50% / 0.5), 0 0 40px hsl(195 100% 50% / 0.3), 0 0 80px hsl(195 100% 50% / 0.1);
+    --glow-gold: 0 0 20px hsl(45 100% 50% / 0.5), 0 0 40px hsl(45 100% 50% / 0.3);
+    --shadow-heroic: 0 25px 50px -12px hsl(220 25% 8% / 0.8);
+    
+    /* Animations */
+    --transition-heroic: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-power: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +129,183 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-rajdhani;
+    background: var(--gradient-hero);
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  /* Hero Animations */
+  .hero-text-glow {
+    @apply text-foreground;
+    text-shadow: var(--glow-arc);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  
+  .arc-reactor-glow {
+    box-shadow: var(--glow-arc);
+    animation: reactor-pulse 2s ease-in-out infinite;
+  }
+  
+  .stark-gold-glow {
+    color: hsl(var(--stark-gold));
+    text-shadow: var(--glow-gold);
+  }
+  
+  /* Holographic Effects */
+  .holographic {
+    @apply relative;
+    background: linear-gradient(45deg, 
+      transparent 30%, 
+      hsl(var(--primary) / 0.1) 50%, 
+      transparent 70%);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--primary) / 0.3);
+  }
+  
+  .holographic::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-500;
+    background: linear-gradient(45deg, 
+      transparent 30%, 
+      hsl(var(--primary) / 0.2) 50%, 
+      transparent 70%);
+    background-size: 200% 200%;
+    animation: hologram-scan 3s linear infinite;
+  }
+  
+  .holographic:hover::before {
+    @apply opacity-100;
+  }
+  
+  /* Jarvis UI Elements */
+  .jarvis-panel {
+    @apply bg-card/80 backdrop-blur-sm border-primary/30;
+    background-image: 
+      linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px),
+      linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    box-shadow: 
+      inset 0 0 20px hsl(var(--primary) / 0.1),
+      0 0 40px hsl(var(--primary) / 0.2);
+  }
+  
+  /* Interactive Cards */
+  .tech-card {
+    @apply transform transition-all duration-500 hover:scale-105;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+    box-shadow: var(--shadow-heroic);
+  }
+  
+  .tech-card:hover {
+    box-shadow: 
+      var(--shadow-heroic),
+      0 0 30px hsl(var(--primary) / 0.4);
+  }
+  
+  /* Power Button Styles */
+  .power-button {
+    @apply relative overflow-hidden;
+    background: var(--gradient-arc);
+    transition: var(--transition-power);
+  }
+  
+  .power-button::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: var(--gradient-power);
+  }
+  
+  .power-button:hover::before {
+    @apply opacity-100;
+    animation: energy-pulse 0.6s ease-out;
+  }
+  
+  /* Scroll Reveal Animation */
+  .reveal-on-scroll {
+    @apply opacity-0 translate-y-8;
+    transition: var(--transition-heroic);
+  }
+  
+  .reveal-on-scroll.revealed {
+    @apply opacity-100 translate-y-0;
+  }
+  
+  /* Particle Background */
+  .particles {
+    @apply absolute inset-0 overflow-hidden pointer-events-none;
+  }
+  
+  .particle {
+    @apply absolute rounded-full bg-primary/20;
+    animation: float-particle 15s linear infinite;
+  }
+}
+
+@layer utilities {
+  .font-orbitron {
+    font-family: 'Orbitron', monospace;
+  }
+  
+  .font-rajdhani {
+    font-family: 'Rajdhani', sans-serif;
+  }
+  
+  .text-shadow-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+  
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    text-shadow: var(--glow-arc); 
+  }
+  50% { 
+    text-shadow: 
+      0 0 30px hsl(var(--primary) / 0.8),
+      0 0 60px hsl(var(--primary) / 0.6),
+      0 0 120px hsl(var(--primary) / 0.4);
+  }
+}
+
+@keyframes reactor-pulse {
+  0%, 100% { 
+    box-shadow: var(--glow-arc);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 
+      0 0 40px hsl(var(--primary) / 0.8),
+      0 0 80px hsl(var(--primary) / 0.6),
+      0 0 160px hsl(var(--primary) / 0.4);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes hologram-scan {
+  0% { background-position: -200% -200%; }
+  100% { background-position: 200% 200%; }
+}
+
+@keyframes energy-pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+@keyframes float-particle {
+  0% { 
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { 
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
   }
 }

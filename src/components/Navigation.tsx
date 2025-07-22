@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Volume2, VolumeX } from 'lucide-react';
+import { useAudioContext } from './AudioManager';
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const { isPlaying, toggle: toggleAudio } = useAudioContext();
 
   const navItems = [
     { id: 'hero', label: 'HOME' },
@@ -46,10 +47,6 @@ export const Navigation = () => {
     setIsOpen(false);
   };
 
-  const toggleAudio = () => {
-    setIsMuted(!isMuted);
-    // Audio toggle logic can be implemented here
-  };
 
   return (
     <>
@@ -90,7 +87,7 @@ export const Navigation = () => {
                 onClick={toggleAudio}
                 className="text-muted-foreground hover:text-primary"
               >
-                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                {!isPlaying ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
               </Button>
             </div>
 
@@ -102,7 +99,7 @@ export const Navigation = () => {
                 onClick={toggleAudio}
                 className="text-muted-foreground hover:text-primary"
               >
-                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                {!isPlaying ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
               </Button>
               <Button
                 variant="ghost"

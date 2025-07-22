@@ -7,7 +7,7 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isPlaying, hasError, toggle: toggleAudio } = useAudioContext();
+  const { isPlaying, toggle: toggleAudio } = useAudioContext();
 
   const navItems = [
     { id: 'hero', label: 'HOME' },
@@ -85,8 +85,8 @@ export const Navigation = () => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleAudio}
-                className={`text-muted-foreground hover:text-primary ${hasError ? 'opacity-50' : ''}`}
-                title={hasError ? 'Audio unavailable' : isPlaying ? 'Mute audio' : 'Play audio'}
+                className="text-muted-foreground hover:text-primary"
+                title={isPlaying ? 'Mute audio' : 'Play heroic tone'}
               >
                 {!isPlaying ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
               </Button>
@@ -98,8 +98,8 @@ export const Navigation = () => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleAudio}
-                className={`text-muted-foreground hover:text-primary ${hasError ? 'opacity-50' : ''}`}
-                title={hasError ? 'Audio unavailable' : isPlaying ? 'Mute audio' : 'Play audio'}
+                className="text-muted-foreground hover:text-primary"
+                title={isPlaying ? 'Mute audio' : 'Play heroic tone'}
               >
                 {!isPlaying ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
               </Button>

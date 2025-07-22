@@ -1,24 +1,91 @@
-import { createContext, useContext, ReactNode } from 'react';
-import { useAudio } from '@/hooks/useAudio';
+import { createContext, useContext, ReactNode, useState, useRef, useCallback } from 'react';
 
 interface AudioContextType {
   isPlaying: boolean;
-  isLoaded: boolean;
-  hasError: boolean;
   toggle: () => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider = ({ children }: { children: ReactNode }) => {
-  // Use a data URL for a simple beep sound as fallback
-  const audioDataUrl = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzuP1vLKfStFJnLJx9kJQGoUWbzn+HgcBzVzwNmWQweRW7ft7MQHD0aNY7P9T2cQF2/F3fJ5KgcmfdX16YgzCRNlvuv7mEoODVOl6PBxJAcnHN302Z8/CBjh4/zLXnwCByux2+CgOwgTYrTo8qJdEw5XqOnyi2YdBDKN1/G7QTAJ7+PtsaBNAktTwOCwbigGKz2Kpgnn9OOLNwceWbPl/KBMEAhdvuXuqkzgCQ1F/2lq9+yKZS2z9d03+ywGJTNx9zMXOLrn83mhOQcUGbPq9K1IGE05k8jXgCcHLT7az59SBweE3O6kfSqd2+3n8XYv';
-  
-  // Try to use the theme music first, fallback to data URL
-  const { isPlaying, isLoaded, hasError, toggle } = useAudio('/avengers-theme.mp3', 0.15);
-  
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const oscillatorRef = useRef<OscillatorNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+
+  const createHeroicTone = useCallback(() => {
+    try {
+      // Create audio context if it doesn't exist
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+
+      const audioCtx = audioContextRef.current;
+      
+      // Create oscillator and gain node
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      // Set up a heroic chord progression (C major chord)
+      oscillator.frequency.setValueAtTime(261.63, audioCtx.currentTime); // C note
+      oscillator.type = 'square';
+      
+      // Set volume
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      
+      // Connect nodes
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      // Store references
+      oscillatorRef.current = oscillator;
+      gainNodeRef.current = gainNode;
+      
+      // Start the tone
+      oscillator.start();
+      
+      console.log('Hero tone started');
+      return true;
+    } catch (error) {
+      console.warn('Failed to create audio:', error);
+      return false;
+    }
+  }, []);
+
+  const stopTone = useCallback(() => {
+    try {
+      if (oscillatorRef.current) {
+        oscillatorRef.current.stop();
+        oscillatorRef.current = null;
+      }
+      if (gainNodeRef.current) {
+        gainNodeRef.current = null;
+      }
+      console.log('Hero tone stopped');
+    } catch (error) {
+      console.warn('Error stopping audio:', error);
+    }
+  }, []);
+
+  const toggle = useCallback(() => {
+    if (isPlaying) {
+      stopTone();
+      setIsPlaying(false);
+    } else {
+      const success = createHeroicTone();
+      if (success) {
+        setIsPlaying(true);
+        // Auto-stop after 10 seconds to prevent infinite playing
+        setTimeout(() => {
+          stopTone();
+          setIsPlaying(false);
+        }, 10000);
+      }
+    }
+  }, [isPlaying, createHeroicTone, stopTone]);
+
   return (
-    <AudioContext.Provider value={{ isPlaying, isLoaded, hasError, toggle }}>
+    <AudioContext.Provider value={{ isPlaying, toggle }}>
       {children}
     </AudioContext.Provider>
   );

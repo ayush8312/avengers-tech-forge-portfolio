@@ -10,7 +10,7 @@ interface AudioContextType {
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider = ({ children }: { children: ReactNode }) => {
-  const { isPlaying, isLoaded, toggle } = useAudio('/hero-theme.mp3', 0.2);
+  const { isPlaying, isLoaded, toggle } = useAudio('/avengers-theme.mp3', 0.15);
 
   return (
     <AudioContext.Provider value={{ isPlaying, isLoaded, toggle }}>
